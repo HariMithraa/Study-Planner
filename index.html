@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>"ProfoStudiez"</title>
+    <style>
+        body {
+            font-family: Harrington,sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fcbef2;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align:left;
+            margin-bottom: 44px;
+        }
+        h1 {
+            font-size: 36px;
+            color: hsl(320, 93%, 42%);
+        }
+        /*real time*/
+        .time-date {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        /* Calendar */
+        .calendar {
+            text-align: center;
+        }
+        /* Pomodoro Timer */
+        .pomodoro {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .pomodoro button {
+            padding: 15px;
+            background-color: hsl(210, 92%, 77%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pomodoro button:hover {
+            background-color: hsl(214, 75%, 75%);
+        }
+        .pomodoro .timer {
+            font-size: 50px;
+            margin: 20px;
+        }
+        /* To-Do List */
+        .todo-list {
+            margin-bottom: 40px;
+        }
+        .todo-list input {
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .todo-list button {
+            background-color: hsl(207, 87%, 75%);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .todo-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .todo-list li {
+            padding: 10px;
+            background-color: #fff;
+            margin: 5px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .todo-list .delete {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        /* Image Boxes */
+        .image-boxes {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+        }
+        .image-box {
+            width: 200px;
+            height: 200px;
+            background-color: #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        /* Eisenhower Matrix */
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        .matrix .box {
+            background-color: hsl(202, 97%, 75%);
+            padding: 20px;
+            box-shadow: 0 4px 8px hsl(0, 0, 0, 0.1);
+            border-radius: 8px;
+            min-height: 150px;
+        }
+        .matrix .box h3 {
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>ProfoStudiez</h1>
+            <p>Your productivity hub</p>
+        </header>
+        <!--real time-->
+        <div class="time-date" id="time-date">
+            <!-- Current date and time will be displayed here -->
+        </div>
+    
+
+        <!-- Calendar -->
+        <section class="calendar">
+            <h2>Calendar</h2>
+            <iframe src="https://calendar.google.com/calendar/embed?src=en.indian%23holiday%40group.v.calendar.google.com&ctz=Asia%2FKolkata" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        </section>
+
+        <!-- Pomodoro Timer -->
+        <section class="pomodoro">
+            <h2>Pomodoro Timer</h2>
+            <div class="timer" id="pomodoroTimer">25:00</div>
+            <button onclick="startPomodoro()">Start Pomodoro</button>
+        </section>
+
+        <!-- To-Do List -->
+        <section class="todo-list">
+            <h2>To-Do List</h2>
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <button onclick="addTask()">Add Task</button>
+            <ul id="taskList"></ul>
+        </section>
+
+        
+        <!-- Eisenhower Matrix -->
+        <section class="matrix">
+            <div class="box">
+                <h3>Important & Urgent</h3>
+                <p>Focus on tasks that need immediate attention.</p>
+            </div>
+            <div class="box">
+                <h3>Important & Not Urgent</h3>
+                <p>Plan and schedule these tasks.</p>
+            </div>
+            <div class="box">
+                <h3>Not Important & Urgent</h3>
+                <p>Delegate these tasks if possible.</p>
+            </div>
+            <div class="box">
+                <h3>Not Important & Not Urgent</h3>
+                <p>Consider eliminating or minimizing these tasks.</p>
+            </div>
+        </section>
+
+
+        
+    </div>
+
+    <script>
+        //real time//
+        function updateTime() {
+            const date = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: true 
+            };
+            const currentDateTime = date.toLocaleString('en-US', options);
+            document.getElementById('time-date').textContent = currentDateTime;
+        }
+
+        setInterval(updateTime, 1000); // Update every second
+        updateTime(); // Initial call to display time instantly
+    
+
+        // Pomodoro Timer Functionality
+        let pomodoroTimer;
+        let seconds = 25 * 60;
+        let isRunning = false;
+
+        function startPomodoro() {
+            if (isRunning) return;
+
+            isRunning = true;
+            pomodoroTimer = setInterval(function () {
+                seconds--;
+                let minutes = Math.floor(seconds / 60);
+                let remainingSeconds = seconds % 60;
+                document.getElementById('pomodoroTimer').textContent = `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+
+                if (seconds <= 0) {
+                    clearInterval(pomodoroTimer);
+                    isRunning = false;
+                    alert("Pomodoro session is over!");
+                }
+            }, 1000);
+        }
+
+        // To-Do List Functionality
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskText = taskInput.value.trim();
+
+            if (taskText === '') {
+                alert('Please enter a task!');
+                return;
+            }
+
+            const taskList = document.getElementById('taskList');
+            const taskItem = document.createElement('li');
+            taskItem.innerHTML = `
+                ${taskText}
+                <button class="delete" onclick="deleteTask(this)">Delete</button>
+            `;
+            taskList.appendChild(taskItem);
+            taskInput.value = '';
+        }
+
+        function deleteTask(button) {
+            button.parentElement.remove();
+        }
+    </script>
+</body>
+</html>
